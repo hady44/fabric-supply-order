@@ -42,8 +42,13 @@ public class RegisterUser {
 		Wallet wallet = Wallets.newFileSystemWallet(Paths.get("wallet"));
 
 		// Check to see if we've already enrolled the user.
-		if (wallet.get("appUser") != null) {
-			System.out.println("An identity for the user \"appUser\" already exists in the wallet");
+		if (wallet.get("org1User") != null) {
+			System.out.println("An identity for the user \"org1user\" already exists in the wallet");
+			return;
+		}
+
+		if (wallet.get("supplierUser") != null) {
+			System.out.println("An identity for the user \"supplierUser\" already exists in the wallet");
 			return;
 		}
 
@@ -98,14 +103,24 @@ public class RegisterUser {
 		};
 
 		// Register the user, enroll the user, and import the new identity into the wallet.
-		RegistrationRequest registrationRequest = new RegistrationRequest("appUser");
+		RegistrationRequest registrationRequest = new RegistrationRequest("org1User");
 		registrationRequest.setAffiliation("org1.department1");
-		registrationRequest.setEnrollmentID("appUser");
+		registrationRequest.setEnrollmentID("org1User");
 		String enrollmentSecret = caClient.register(registrationRequest, admin);
-		Enrollment enrollment = caClient.enroll("appUser", enrollmentSecret);
+		Enrollment enrollment = caClient.enroll("org1User", enrollmentSecret);
 		Identity user = Identities.newX509Identity("Org1MSP", adminIdentity.getCertificate(), adminIdentity.getPrivateKey());
-		wallet.put("appUser", user);
-		System.out.println("Successfully enrolled user \"appUser\" and imported it into the wallet");
+		wallet.put("org1User", user);
+		System.out.println("Successfully enrolled user \"org1User\" and imported it into the wallet");
+
+
+		RegistrationRequest supplierRegistrationRequest = new RegistrationRequest("supplierUser");
+		supplierRegistrationRequest.setAffiliation("org2.department1");
+		supplierRegistrationRequest.setEnrollmentID("supplierUser");
+		String supplier_enrollmentSecret = caClient.register(supplierRegistrationRequest, admin);
+		Enrollment supplierEnrollment = caClient.enroll("supplierUser", supplier_enrollmentSecret);
+		Identity supplierUser = Identities.newX509Identity("Org2MSP", adminIdentity.getCertificate(), adminIdentity.getPrivateKey());
+		wallet.put("supplierUser", supplierUser);
+		System.out.println("Successfully enrolled user \"supplierUser\" and imported it into the wallet");
 	}
 
 }
