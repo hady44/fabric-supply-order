@@ -6,7 +6,10 @@
 
 'use strict';
 
-const FabCar = require('./lib/fabcar');
+const Org1 = require('./lib/Org1');
+const Supplier = require('./lib/Supplier');
 
-module.exports.FabCar = FabCar;
-module.exports.contracts = [ FabCar ];
+module.exports.Org1 = Org1;
+module.exports.Supplier = Supplier;
+
+module.exports.contracts = [ Org1, Supplier ];
